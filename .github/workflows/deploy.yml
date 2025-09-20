@@ -80,7 +80,7 @@ jobs:
           production-deploy: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: f5b1b475-6b31-4585-8f44-ba818598e970
         
       - name: Deploy to Netlify (Preview)
         if: github.ref != 'refs/heads/main'
@@ -90,7 +90,7 @@ jobs:
           production-deploy: false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: f5b1b475-6b31-4585-8f44-ba818598e970
         
       - name: Comment PR with preview URL
         if: github.event_name == 'pull_request'
@@ -102,7 +102,7 @@ jobs:
             
             // Try to get deploy URL from Netlify output
             try {
-              const deployUrl = process.env.DEPLOY_URL || 'https://deploy-preview-${{ github.event.number }}--your-site.netlify.app';
+              const deployUrl = process.env.DEPLOY_URL || 'https://deploy-preview-${{ github.event.number }}--airplusams.netlify.app';
               
               await github.rest.issues.createComment({
                 issue_number: context.issue.number,
@@ -145,7 +145,7 @@ jobs:
         run: |
           echo "Deployment failed. Initiating rollback..."
           curl -X POST -H "Authorization: Bearer ${{ secrets.NETLIFY_AUTH_TOKEN }}" \
-            "https://api.netlify.com/api/v1/sites/${{ secrets.NETLIFY_SITE_ID }}/deploys/restore" \
+            "https://api.netlify.com/api/v1/sites/f5b1b475-6b31-4585-8f44-ba818598e970/deploys/restore" \
             -d '{"deploy_id": "previous"}' || echo "Rollback failed or not needed"
 
   health-check:
@@ -156,5 +156,5 @@ jobs:
       - name: Health check
         run: |
           sleep 30  # Wait for deployment to be fully available
-          curl -f https://aams.netlify.app || exit 1
+          curl -f https://airplusams.netlify.app || exit 1
           echo "Health check passed"
